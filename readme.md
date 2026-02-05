@@ -122,3 +122,148 @@ Makna:
 
 ---
 ## 8 Generate proof
+Blik ke root
+```bash
+cd ..
+```
+Run:
+```bash
+snarkjs groth16 prove password.zkey witness.wtns proof.json public.json
+```
+Output:
+```bash 
+proof.json
+public.json
+```
+
+--- 
+
+## 9 Verify locally
+```bash
+snarkjs groth16 verify verification_key.json public.json proof.json
+```
+Output:
+```bash
+OK
+```
+Artinya:
+- ZK proof kamu VALID secara kriptografi.
+
+--- 
+
+# PHASE 2 - BLOCKCHAIN
+
+---
+
+Folder:
+```bash 
+password verification/blockchain
+```
+
+## 10 Init Hardhat
+```bash
+hardhat.config.ts
+contracts/
+scripts/
+``` 
+
+---
+
+## 11 Copy Verifier.sol
+Taruh ke:
+```bash
+blockchain/contracts/Verifier.sol
+```
+
+---
+
+## 12 Compile Smartcontrack
+```bash
+npx hardhat compile
+```
+Jika sukses:
+```bash
+artifacts/
+cache/
+```
+berhasil dibuat
+
+---
+
+## 13 Deploy ke Sepolia
+Script:
+```bash
+scripts/deploy.ts
+```
+Run:
+```bash
+npx hardhat run scripts/deploy.ts --network sepolia
+```
+Output:
+```bash
+Contract deployedto:
+0x....
+```
+Ini alamat verifier.
+
+---
+# ON-CHAIN VERIFY
+---
+
+## 14 Masuk Hardhat Console
+```bash 
+npx hardhat console --network sepolia
+```
+
+---
+
+## 15 Load Contrack
+Di console:
+```c
+const { ethers } =awaitimport("ethers")
+
+const provider =new ethers.JsonRpcProvider(process.env.RPC_URL)
+const wallet =new ethers.Wallet(process.env.PRIVATE_KEY, provider)
+
+const artifact =await hre.artifacts.readArtifact("Groth16Verifier")
+
+const contract =new ethers.Contract(
+"DEPLOYED_ADDRESS",
+ artifact.abi,
+ wallet
+)
+```
+
+---
+
+## 16 Call verifyProof
+Dari proof.json kamu copy:
+```bash
+await contract.verifyProof(a,b,c,input)
+```
+Output:
+```bash
+true
+```
+ini berati:
+- Proof berhasil diverifikasi ON-CHAIN. 
+
+
+Flow:
+``` bash
+password.circom
+     ↓
+.r1cs + wasm
+     ↓
+input.json
+     ↓
+witness
+     ↓
+proof.json
+     ↓
+Verifier.sol
+     ↓
+Hardhat Deploy
+     ↓
+verifyProof ON-CHAIN
+```
