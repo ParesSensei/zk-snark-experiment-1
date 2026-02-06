@@ -57,16 +57,15 @@ fungsi:
 - mengamankan toxic waste
 - membuat parameter publik final  
 
-Memastikan file final siap dan terverifikasi secara kriptografis:
+prepare phase2:
 ```bash
-snarkjs powersoftau prepare phase2 pot12_final.ptau pot12_final_verified.ptau
+snarkjs powersoftau prepare phase2 pot12_final.ptau pot12_phase2.ptau
 ```
-
 --- 
 
 ## 3 Circuit-specific setup (Groth16)
 ```bash 
-snarkjs groth16 setup password.r1cs pot12_final.ptau password.zkey
+snarkjs groth16 setup password.r1cs pot12_phase2.ptau password.zkey
 ```
 Output:
 ```bash 
@@ -78,7 +77,7 @@ ini file paling penting -> Berisi proving key + verifying key
 
 ## 4 Export verification key
 ```bash 
-snarkjs zkeyexport verificationkey password.zkey verification_key.json
+snarkjs zkey export verificationkey password.zkey verification_key.json
 ```
 Dipakai untuk:
 - generate Solidity verifier
@@ -88,7 +87,7 @@ Dipakai untuk:
 
 ## 5 Generate Solidity verifier
 ```bash 
-snarkjs zkeyexport solidityverifier password.zkey Verifier.sol
+snarkjs zkey export solidityverifier password.zkey Verifier.sol
 ```
 Output:
 ```bash
