@@ -16,6 +16,10 @@ Output:
 password.r1cs       →constraintsystem
 password_js/        → wasm + witness generator
 ```
+Kalau error run:
+```bash
+circom password.circom --r1cs --wasm -l node_modules
+```
 
 Makna: 
 
