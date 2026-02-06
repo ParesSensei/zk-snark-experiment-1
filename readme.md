@@ -102,6 +102,10 @@ ini yang akan dipakai dicopy ke hardhat
 ---
 
 ## 6️ Generate input.json (commitment)
+install dependency:
+```bash
+npm install circomlibjs ffjavascript
+```
 dari: 
 ```bash
 node genInput.js
