@@ -7,7 +7,11 @@
 ## 📦 PHASE 1 — CIRCUIT → PROOF
 
 ## 📦 1 Compile circuit
-Command: 
+Install Circomlib:
+```bash 
+npm install circomlib
+```
+Compile circuit command: 
 ```bash 
 circom password.circom --r1cs --wasm
 ```
@@ -40,13 +44,23 @@ Makna:
 - bn128 → curve Groth16
 - 12 → size circuit (~2^12 constraints) 
 
+Note:  
+If you want multiple contributors, create intermediate ptau files 
+(e.g. pot12_0001.ptau, pot12_0002.ptau). 
+For single-user setup, directly generating pot12_final.ptau is sufficient.  
+
 Contribute entropy
 ```bash 
 snarkjs powersoftau contribute pot12_0000.ptau pot12_final.ptau
 ```
 fungsi: 
 - mengamankan toxic waste
-- membuat parameter publik final
+- membuat parameter publik final  
+
+Memastikan file final siap dan terverifikasi secara kriptografis:
+```bash
+snarkjs powersoftau prepare phase2 pot12_final.ptau pot12_final_verified.ptau
+```
 
 --- 
 
