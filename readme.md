@@ -247,15 +247,13 @@ npx hardhat console --network sepolia
 ## 15 Load Contrack
 Di console:
 ```c
-const { ethers } =awaitimport("ethers")
-
+const { ethers } =await import("ethers")
 const provider =new ethers.JsonRpcProvider(process.env.RPC_URL)
 const wallet =new ethers.Wallet(process.env.PRIVATE_KEY, provider)
-
 const artifact =await hre.artifacts.readArtifact("Groth16Verifier")
 
 const contract =new ethers.Contract(
-"DEPLOYED_ADDRESS",
+"0x85eaD55c474D3C525A37b694225D07a85bBDA9f7",
  artifact.abi,
  wallet
 )
@@ -264,9 +262,18 @@ const contract =new ethers.Contract(
 ---
 
 ## 16 Call verifyProof
+Generate solidity call data dari root project:
+```bash
+snarkjs zkey export soliditycalldata public.json proof.json
+```
+
 Dari proof.json kamu copy:
 ```bash
 await contract.verifyProof(a,b,c,input)
+```
+isi a,b,c dan input:
+```bash
+await contract.verifyProof(["0x151b464a976ef815da6f52aca6e8c532e6da26c9045fc9ee5a8167671ae50a4b", "0x2059266664471a87f3225452092535834b436c8675bc4dfe6a610b97ef1ff7a3"],[["0x1ab193281d365c9e75f506353313401cad112d0e9eaf16b7d4f14f206adc7e62", "0x0eddfdb80240d30a9597f756f414c2c18920916f53b88cca33ae010d535ab00c"],["0x1cbdc8575a48f99ff0b410a7cce04ef31dbbd4071ee10e2efd40770c7ed1eb06", "0x1cc12b3324f671811065b62529bff68a9faeb2c49d710bc36276444a62b20229"]],["0x21b6ed67233f0c8fd3cbf0ce0a74b18ff20cfc25c6408870040b802680f75aed", "0x291a874e1ef75a12ccbd2bd9dcb53706184ed74336a830e4653c77e688b0bd66"],["0x22634a86be9ecaee4724fccbae623c9fe60454f65f459b42029af1f823463b07"])
 ```
 Output:
 ```bash
