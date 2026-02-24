@@ -99,11 +99,19 @@ app.post("/login", async (req, res) => {
       commitment
     };
 
-    const { proof, publicSignals } = await snarkjs.groth16.fullProve(
-      input,
-      "./password_js/password.wasm",
-      "./password.zkey"
-    );
+    let proof, publicSignals;
+
+    // CRYPTOGRAPHIC CHECK
+    try {
+      ({ proof, publicSignals } = await snarkjs.groth16.fullProve(
+        input,
+        "./password_js/password.wasm",
+        "./password.zkey"
+      ));
+    } catch {
+      // PASSWORD SALAH MASUK KE SINI
+      return res.status(401).json({ error: "invalid password" });
+    }
 
     const vKey = JSON.parse(
       fs.readFileSync("./verification_key.json")
@@ -118,6 +126,7 @@ app.post("/login", async (req, res) => {
     if (!verified)
       return res.status(400).json({ error: "invalid proof" });
 
+    // ON-CHAIN VERIFY
     const calldata = await snarkjs.groth16.exportSolidityCallData(
       proof,
       publicSignals
@@ -144,6 +153,7 @@ app.post("/login", async (req, res) => {
     });
 
   } catch (err) {
+    // ERROR (RPC down, file hilang, bug, dsb)
     console.error(err);
     res.status(500).json({ error: "login failed" });
   }
